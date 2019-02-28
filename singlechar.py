@@ -6,7 +6,7 @@ without waiting for the user to hit <Enter>.
 (OS is Linux, Ubuntu 14.04)
 """
 
-import tty, sys, termios
+import tty, sys, termios, subprocess, os
 
 class ReadChar():
     def __enter__(self):
@@ -19,8 +19,13 @@ class ReadChar():
 
 def test():
     while True:
-        with ReadChar() as rc:
-            char = rc
+        ifile = open("char.txt",'r')
+        char = ifile.read()
+        ifile.close()
+        if not char:
+            char = 'c'
+        #with ReadChar() as rc:
+        #    char = rc
         if ord(char) <= 32:
             print("You entered character with ordinal {}."\
                         .format(ord(char)))
