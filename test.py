@@ -6,7 +6,7 @@ mA = LargeMotor('outA')
 mD = LargeMotor('outD')
 command = 'g'
 while(command != 'x'):
-	command = input("command: ")
+	command = getch("command: ")
 	if(command == 'f'):
 		mA.run_timed(time_sp=1000, speed_sp=750)
 		mD.run_timed(time_sp=1000, speed_sp=750)
