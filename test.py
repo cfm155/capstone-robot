@@ -3,19 +3,25 @@
 from ev3dev.ev3 import *
 from time import sleep
 mA = LargeMotor('outA')
+mB = LargeMotor('outB')
 mD = LargeMotor('outD')
 command = 'g'
 while(command != 'x'):
-	command = getch("command: ")
+	command = input("command: ")
 	if(command == 'f'):
 		mA.run_timed(time_sp=1000, speed_sp=750)
+		mB.run_timed(time_sp=1000, speed_sp=-750)
 		mD.run_timed(time_sp=1000, speed_sp=750)
 	elif(command == 'r'):
-		mD.run_timed(time_sp=1000, speed_sp=750)
+		mA.run_timed(time_sp=1000, speed_sp=750, position_sp=-360)
+		mD.run_timed(time_sp=1000, speed_sp=750, position_sp=-360)
+		mB.run_timed(time_sp=1000, speed_sp=-750, position_sp=360)
 	elif(command == 'l'):
 		mA.run_timed(time_sp=1000, speed_sp=750)
+		mB.run_timed(time_sp=1000, speed_sp=-750)
 	elif(command == 'v'):
 		mA.run_timed(time_sp=1000, speed_sp=-750)
+		mB.run_timed(time_sp=1000, speed_sp=750)
 		mD.run_timed(time_sp=1000, speed_sp=-750)
 #print("set speed (speed_sp) = " + str(mA.speed_sp))
 #sleep(1)  # it takes a moment for the motor to start moving
