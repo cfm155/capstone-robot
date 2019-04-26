@@ -4,6 +4,7 @@ from ev3dev.ev3 import *
 from time import sleep
 # V2/V1 = (R + r)/(R - r)
 turn = 150
+speed = 450
 mA = LargeMotor('outA')
 mB = LargeMotor('outB')
 mC = LargeMotor('outC')
@@ -17,15 +18,15 @@ while(command != 'x'):
 		mC.run_timed(time_sp=1000, speed_sp=-600)
 		mD.run_timed(time_sp=1000, speed_sp=600)
 	elif(command == 'r'):
-		mA.run_timed(time_sp=1000, speed_sp=450 + turn)
-		mB.run_timed(time_sp=1000, speed_sp=-450 - turn)
-		mC.run_timed(time_sp=1000, speed_sp=-450 + turn)
-		mD.run_timed(time_sp=1000, speed_sp=450 - turn)
+		mA.run_timed(time_sp=1000, speed_sp=speed + turn)
+		mB.run_timed(time_sp=1000, speed_sp=-speed - turn)
+		mC.run_timed(time_sp=1000, speed_sp=-speed + turn)
+		mD.run_timed(time_sp=1000, speed_sp=speed - turn)
 	elif(command == 'l'):
-		mA.run_timed(time_sp=1000, speed_sp=450 - turn)
-		mB.run_timed(time_sp=1000, speed_sp=-450 + turn)
-		mC.run_timed(time_sp=1000, speed_sp=-450 - turn)
-		mD.run_timed(time_sp=1000, speed_sp=450 + turn)
+		mA.run_timed(time_sp=1000, speed_sp=speed - turn)
+		mB.run_timed(time_sp=1000, speed_sp=-speed + turn)
+		mC.run_timed(time_sp=1000, speed_sp=-speed - turn)
+		mD.run_timed(time_sp=1000, speed_sp=speed + turn)
 	elif(command == 'v'):
 		mA.run_timed(time_sp=1000, speed_sp=-600)
 		mB.run_timed(time_sp=1000, speed_sp=600)
