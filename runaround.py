@@ -7,8 +7,8 @@ import random
 UNKNOWN = 0
 BLACK = 1
 BLUE = 2
-RED = 3
-BLUE = 4
+GREEN = 3
+YELLOW = 4
 RED = 5
 WHITE = 6
 BROWN = 7
@@ -39,17 +39,20 @@ motorFL = LargeMotor('outA')
 motorBL = LargeMotor('outB')
 motorBR = LargeMotor('outC')
 motorFR = LargeMotor('outD')
-colSens = ColorSensor()
+colSens = ColorSensor('in4')
 colSens.mode='COL-COLOR'
-colors=('unknown','black','blue','RED','BLUE','red','white','brown')
+colors=('unknown','black','blue','green','yellow','red','white','brown')
 color = 0
 
 def getColor(): 
     global color 
     color = colSens.value()
-    if color == BLACK:  # BLUE sometimes appears to be brown 
-      color = BLUE
     print(colors[color])
+
+motorFR.run_forever(speed_sp= MIN_SPEED)
+motorBR.run_forever(speed_sp= -(MIN_SPEED))
+motorBL.run_forever(speed_sp= -(MIN_SPEED))
+motorFL.run_forever(speed_sp= MIN_SPEED)
 
 for outercount in range(MAX_OUTERCOUNT):
   for innercount in range(MAX_INNERCOUNT):
@@ -61,7 +64,7 @@ for outercount in range(MAX_OUTERCOUNT):
     if (FOLLOW_BLUE_RED and not(following_line)):
       if (not(hit_first_color) 
       and (color == BLUE or color == RED)):
-        # Hit first of two colors 
+        # Hit first of two colors
         hit_first_color = True
         motorFR.run_forever(speed_sp= MIN_SPEED + SLOW_TURN_SPEED)
         motorBR.run_forever(speed_sp= -(MIN_SPEED + SLOW_TURN_SPEED))
