@@ -9,7 +9,8 @@ except paramiko.SSHException:
         print("Connection Failed")
         quit()
  
-stdin,stdout,stderr = ssh.exec_command("python3 onemotor.py")
+ssh.exec_command("python3 runaround.py")
+sleep(10)
 #sleep(5)
 #stdin,stdout,stderr = ssh.exec_command("hello")
 #sleep(1)
@@ -17,6 +18,13 @@ stdin,stdout,stderr = ssh.exec_command("python3 onemotor.py")
 #sleep(1)
 #sleep(10)
 #stdin.write("x")
+
+ssh.exec_command("^C")
+stdin,stdout,stderr = ssh.exec_command("python3 turn.py")
 for line in stdout.readlines():
         print(line.strip())
+sleep(5)
+
+ssh.exec_command("python3 runaround.py")
+
 ssh.close()

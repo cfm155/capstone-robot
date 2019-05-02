@@ -28,9 +28,19 @@ while row < len(reds) - 2:
 		col += 1
 	row += 1
 ofile = open('new.bmp','wb')
+redfile = open('redonly.bmp', 'wb')
 filetowrite = []
+
 for i in range(len(bytesss)):
-	if i > 137 and (i-138) %3 == 0:
+	if i > 137 and (i-139) %3 == 0:
+		redfile.write(bytes([bytesss[i]]))
+	elif i < 137:
+		redfile.write(bytes([bytesss[i]]))
+	else:
+		redfile.write(bytes([0]))
+
+for i in range(len(bytesss)):
+	if i > 137 and (i-140) %3 == 0:
 		ofile.write(bytes([avgreds[(i-138)//3%1920][(i-138)//3//1920]]))
 	else:
 		ofile.write(bytes([bytesss[i]]))
