@@ -10,8 +10,7 @@ except paramiko.SSHException:
         quit()
  
 ssh.exec_command("python3 runaround.py")
-sleep(10)
-#sleep(5)
+sleep(5)
 #stdin,stdout,stderr = ssh.exec_command("hello")
 #sleep(1)
 #stdin.write("hello\n")
@@ -19,7 +18,8 @@ sleep(10)
 #sleep(10)
 #stdin.write("x")
 
-ssh.exec_command("^C")
+ssh.exec_command("\x03")
+sleep(1)
 stdin,stdout,stderr = ssh.exec_command("python3 turn.py")
 for line in stdout.readlines():
         print(line.strip())
