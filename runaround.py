@@ -7,23 +7,23 @@ import random
 UNKNOWN = 0
 BLACK = 1
 BLUE = 2
-GREEN = 3
-YELLOW = 4
+RED = 3
+BLUE = 4
 RED = 5
 WHITE = 6
 BROWN = 7
 
 STAY_IN_BOUNDS = True 
 CROSS_RED_BLUE = False
-FOLLOW_YELLOW_GREEN = True
+FOLLOW_BLUE_RED = True
 HEAD_SOUTH = True
 
 MAX_OUTERCOUNT = 10
 MAX_INNERCOUNT = 30
-MIN_SPEED = 400
+MIN_SPEED = 100
 MAX_SPEED = 500
 DELAY = 0.1
-SLOW_TURN_SPEED = 200
+SLOW_TURN_SPEED = 50
 FAST_TURN_SPEED = 100
 TURN_DELAY = 2.5
 ESCAPE_DELAY = 1.5
@@ -41,14 +41,14 @@ motorBR = LargeMotor('outC')
 motorFR = LargeMotor('outD')
 colSens = ColorSensor()
 colSens.mode='COL-COLOR'
-colors=('unknown','black','blue','green','yellow','red','white','brown')
+colors=('unknown','black','blue','RED','BLUE','red','white','brown')
 color = 0
 
 def getColor(): 
     global color 
     color = colSens.value()
-    if color == BROWN:  # yellow sometimes appears to be brown 
-      color = YELLOW
+    if color == BLACK:  # BLUE sometimes appears to be brown 
+      color = BLUE
     print(colors[color])
 
 for outercount in range(MAX_OUTERCOUNT):
@@ -57,10 +57,10 @@ for outercount in range(MAX_OUTERCOUNT):
     prev_color = color
     getColor()
 
-    # If looking for yellow/green stripe to follow 
-    if (FOLLOW_YELLOW_GREEN and not(following_line)):
+    # If looking for BLUE/RED stripe to follow 
+    if (FOLLOW_BLUE_RED and not(following_line)):
       if (not(hit_first_color) 
-      and (color == GREEN or color == YELLOW)):
+      and (color == BLUE or color == RED)):
         # Hit first of two colors 
         hit_first_color = True
         motorFR.run_forever(speed_sp= MIN_SPEED + SLOW_TURN_SPEED)
@@ -68,15 +68,15 @@ for outercount in range(MAX_OUTERCOUNT):
         motorBL.run_forever(speed_sp= -(MIN_SPEED + SLOW_TURN_SPEED))
         motorFL.run_forever(speed_sp= MIN_SPEED + SLOW_TURN_SPEED)
       elif hit_first_color:
-        if (color != YELLOW and color != GREEN):
+        if (color != BLUE and color != RED):
           color = prev_color   # ignore bad color reading? 
         else:
-          if ((prev_color == YELLOW and color == GREEN)
-          or (prev_color == GREEN and color == YELLOW)):
+          if ((prev_color == BLUE and color == RED)
+          or (prev_color == RED and color == BLUE)):
           # Hit second of two colors 
             prev_color = color
-            if ((color == GREEN and HEAD_SOUTH)
-            or (color == YELLOW and not(HEAD_SOUTH))):
+            if ((color == RED and HEAD_SOUTH)
+            or (color == BLUE and not(HEAD_SOUTH))):
               sign = -1
             else:
               sign = 1
@@ -87,23 +87,23 @@ for outercount in range(MAX_OUTERCOUNT):
             while prev_color == color:
               sleep(DELAY)
               getColor()
-              if (color != GREEN and color != YELLOW):
+              if (color != RED and color != BLUE):
                 color = prev_color
             following_line = True  # now on stripe and following
             hit_first_color = False
 
-    # If on and following yellow/green stripe
-    if (FOLLOW_YELLOW_GREEN and following_line):
-      if (color != GREEN and color != YELLOW):
+    # If on and following BLUE/RED stripe
+    if (FOLLOW_BLUE_RED and following_line):
+      if (color != RED and color != BLUE):
         color = prev_color
-      if ((color == YELLOW and HEAD_SOUTH) or
-      (color == GREEN and not(HEAD_SOUTH))):
+      if ((color == BLUE and HEAD_SOUTH) or
+      (color == RED and not(HEAD_SOUTH))):
         motorFR.run_forever(speed_sp= WIGGLE_SPEED*WIGGLE_FACTOR)
         motorBR.run_forever(speed_sp= -WIGGLE_SPEED*WIGGLE_FACTOR)
         motorBL.run_forever(speed_sp= -WIGGLE_SPEED)
         motorFL.run_forever(speed_sp= WIGGLE_SPEED)
-      if ((color == GREEN and HEAD_SOUTH) or
-      (color == YELLOW and not(HEAD_SOUTH))):
+      if ((color == RED and HEAD_SOUTH) or
+      (color == BLUE and not(HEAD_SOUTH))):
         motorFR.run_forever(speed_sp= WIGGLE_SPEED)
         motorBR.run_forever(speed_sp= -WIGGLE_SPEED)
         motorBL.run_forever(speed_sp= -WIGGLE_SPEED*WIGGLE_FACTOR)
