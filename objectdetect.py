@@ -2,6 +2,7 @@ from PIL import Image, ImageFilter
 import os
 import paramiko
 import time
+from time import sleep
 
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -11,13 +12,14 @@ except paramiko.SSHException:
     print("Connection Failed")
     quit()
 redThreshold = 100
-percThreshold = 4
+percThreshold = 8
 threshold = 100
 top = 500
 bottom = 0
-left = 200
-right = 200
+left = 300
+right = 300
 steps = 30
+ssh.exec_command("python3 runaround.py")
 startTime = time.time()
 for step in range(steps):
     currtime = time.time()
@@ -65,11 +67,12 @@ for step in range(steps):
     # print(max(reds), min(reds))
 
     if percRed > percThreshold:
-        print("object detected, sending beep!")
+        print("object detected, sending command!")
         # ssh.exec_command("python3 beeptest.py")
-        stdin,stdout,stderr = ssh.exec_command("python3 beeptest.py")
+        stdin,stdout,stderr = ssh.exec_command("python3 object.py")
         for line in stdout.readlines():
             print(line.strip())
+        sleep(5)
     else:
         print("no object detected :)")
     print("time spent for step ",step,": ", time.time() - currtime)
