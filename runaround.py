@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from ev3dev.ev3 import *
 from time import sleep
+import os
 import math
 import random
 
@@ -13,10 +14,12 @@ RED = 5
 WHITE = 6
 BROWN = 7
 
+LANE = 'l'
 STAY_IN_BOUNDS = True 
 CROSS_RED_BLUE = False
 FOLLOW_BLUE_RED = True
 HEAD_SOUTH = True
+direction = 1
 
 MAX_OUTERCOUNT = 10
 MAX_INNERCOUNT = 30
@@ -24,7 +27,7 @@ MIN_SPEED = 100
 MAX_SPEED = 500
 DELAY = 0.1
 SLOW_TURN_SPEED = 50
-FAST_TURN_SPEED = 100
+FAST_TURN_SPEED = 150
 TURN_DELAY = 2.5
 ESCAPE_DELAY = 1.5
 WIGGLE_SPEED = 100
@@ -57,10 +60,63 @@ motorFL.run_forever(speed_sp= MIN_SPEED)
 for outercount in range(MAX_OUTERCOUNT):
   for innercount in range(MAX_INNERCOUNT):
     sleep(DELAY)
+    exists = os.path.isfile('object.txt')
+    if exists:
+      print("object detected")
+      Sound.beep()
+      os.system("rm object.txt")
+      hit_first_color = False
+      following_line = False
+      if LANE == 'r':
+        motorFR.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
+        LANE = 'l'
+        sleep(3)
+      else:
+        motorFR.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
+        LANE = 'r'
+        sleep(3)
+
     prev_color = color
     getColor()
 
-    # If looking for BLUE/RED stripe to follow 
+    # If looking for BLUE/RED stripe to follow
+    if color == BLACK or color == UNKNOWN:
+      hit_first_color = False
+      following_line = False
+      if HEAD_SOUTH == True:
+        HEAD_SOUTH = False
+      else:
+        HEAD_SOUTH = True
+      #direction = -direction
+      if LANE == 'r':
+        motorFR.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        sleep(5)
+        motorFR.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
+        sleep(2.5)
+      else:
+        motorFR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBR.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        sleep(5)
+        motorFR.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
+        sleep(2.5)
+
     if (FOLLOW_BLUE_RED and not(following_line)):
       if (not(hit_first_color) 
       and (color == BLUE or color == RED)):
@@ -83,10 +139,10 @@ for outercount in range(MAX_OUTERCOUNT):
               sign = -1
             else:
               sign = 1
-            motorFR.run_forever(speed_sp=  MIN_SPEED - sign * SLOW_TURN_SPEED)
-            motorBR.run_forever(speed_sp=  -MIN_SPEED + sign * SLOW_TURN_SPEED)
-            motorBL.run_forever(speed_sp=  -MIN_SPEED - sign * SLOW_TURN_SPEED)
-            motorFL.run_forever(speed_sp=  MIN_SPEED + sign * SLOW_TURN_SPEED)
+            motorFR.run_forever(speed_sp=  MIN_SPEED - (sign) * SLOW_TURN_SPEED)
+            motorBR.run_forever(speed_sp=  -MIN_SPEED + (sign) * SLOW_TURN_SPEED)
+            motorBL.run_forever(speed_sp=  -MIN_SPEED - (sign) * SLOW_TURN_SPEED)
+            motorFL.run_forever(speed_sp=  MIN_SPEED + (sign) * SLOW_TURN_SPEED)
             while prev_color == color:
               sleep(DELAY)
               getColor()
@@ -94,6 +150,12 @@ for outercount in range(MAX_OUTERCOUNT):
                 color = prev_color
             following_line = True  # now on stripe and following
             hit_first_color = False
+      else:
+        motorFR.run_forever(speed_sp=MIN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED))
+        motorFL.run_forever(speed_sp=MIN_SPEED)
+
 
     # If on and following BLUE/RED stripe
     if (FOLLOW_BLUE_RED and following_line):
