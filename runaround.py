@@ -21,7 +21,7 @@ FOLLOW_BLUE_RED = True
 HEAD_SOUTH = True
 direction = 1
 
-MAX_OUTERCOUNT = 10
+MAX_OUTERCOUNT = 30
 MAX_INNERCOUNT = 30
 MIN_SPEED = 100
 MAX_SPEED = 500
@@ -99,23 +99,23 @@ for outercount in range(MAX_OUTERCOUNT):
         motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorBL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
         motorFL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
-        sleep(5)
+        sleep(7)
         motorFR.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
         motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorBL.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
         motorFL.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
-        sleep(2.5)
+        sleep(1)
       else:
         motorFR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorBR.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
         motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorFL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
-        sleep(5)
+        sleep(7)
         motorFR.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
         motorBR.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
         motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorFL.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
-        sleep(2.5)
+        sleep(1)
 
     if (FOLLOW_BLUE_RED and not(following_line)):
       if (not(hit_first_color) 

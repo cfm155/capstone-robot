@@ -12,12 +12,12 @@ except paramiko.SSHException:
     print("Connection Failed")
     quit()
 redThreshold = 100
-percThreshold = 8
+percThreshold = 10
 threshold = 100
 top = 500
 bottom = 0
-left = 300
-right = 300
+left = 650
+right = 650
 steps = 30
 ssh.exec_command("python3 runaround.py")
 startTime = time.time()
