@@ -11,6 +11,8 @@ try:
 except paramiko.SSHException:
     print("Connection Failed")
     quit()
+
+#TODO mess with thresholds and subrectangle size to find optimal performance
 redThreshold = 100
 percThreshold = 10
 threshold = 100
@@ -72,7 +74,7 @@ for step in range(steps):
         stdin,stdout,stderr = ssh.exec_command("python3 object.py")
         for line in stdout.readlines():
             print(line.strip())
-        sleep(5)
+        sleep(2)
     else:
         print("no object detected :)")
     print("time spent for step ",step,": ", time.time() - currtime)
