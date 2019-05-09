@@ -15,13 +15,13 @@ except paramiko.SSHException:
 #TODO mess with thresholds and subrectangle size to find optimal performance
 redThreshold = 100
 percThreshold = 10
-threshold = 100
+threshold = 75
 top = 500
 bottom = 0
 left = 650
 right = 650
 steps = 30
-ssh.exec_command("python3 runaround.py")
+#ssh.exec_command("python3 runaroundrevised.py")
 startTime = time.time()
 for step in range(steps):
     currtime = time.time()
@@ -36,7 +36,7 @@ for step in range(steps):
     box = (left, top, im.size[0] - right, im.size[1] - bottom)
     region = im.crop(box)
     #region1 = region.filter(ImageFilter.BLUR)
-    region.show()
+    #region.show()
     #region1.show()
 
     pixels = list(region.getdata())
@@ -71,10 +71,9 @@ for step in range(steps):
     if percRed > percThreshold:
         print("object detected, sending command!")
         # ssh.exec_command("python3 beeptest.py")
-        stdin,stdout,stderr = ssh.exec_command("python3 object.py")
+        stdin,stdout,stderr = ssh.exec_command("touch object.txt")
         for line in stdout.readlines():
             print(line.strip())
-        sleep(2)
     else:
         print("no object detected :)")
     print("time spent for step ",step,": ", time.time() - currtime)

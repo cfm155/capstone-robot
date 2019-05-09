@@ -21,18 +21,18 @@ FOLLOW_BLUE_RED = True
 HEAD_SOUTH = True
 direction = 1
 
-MAX_OUTERCOUNT = 30
+MAX_OUTERCOUNT = 10
 MAX_INNERCOUNT = 30
 
 #TODO mess with speeds to find optimal movement, especially considering weight of computer
 MIN_SPEED = 100
 MAX_SPEED = 500
 DELAY = 0.1
-SLOW_TURN_SPEED = 50
+SLOW_TURN_SPEED = 100
 FAST_TURN_SPEED = 150
 TURN_DELAY = 2.5
 ESCAPE_DELAY = 1.5
-WIGGLE_SPEED = 100
+WIGGLE_SPEED = 150
 WIGGLE_FACTOR = 0.2
 
 hit_first_color = False
@@ -72,17 +72,37 @@ for outercount in range(MAX_OUTERCOUNT):
       if LANE == 'r':
         motorFR.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
         motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
-        motorBL.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
-        motorFL.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
-        LANE = 'l'
-        sleep(3)
-      else:
-        motorFR.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
-        motorBR.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        sleep(2)
+        motorFR.run_forever(speed_sp=MIN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED))
+        motorFL.run_forever(speed_sp=MIN_SPEED)
+        sleep(2.5)
+        motorFR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBR.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
         motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
-        motorFL.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
-        LANE = 'r'
+        motorFL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        sleep(1.5)
+        LANE = 'l'
+      else:
+        motorFR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBR.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
         sleep(3)
+        motorFR.run_forever(speed_sp=MIN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED))
+        motorFL.run_forever(speed_sp=MIN_SPEED)
+        sleep(2.5)
+        motorFR.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        sleep(1.5)
+        LANE = 'r'
 
     #TODO CHECK IF THIS ELIF HELPS OR IF IT WORKS BETTER without it
     elif exists:
@@ -101,27 +121,57 @@ for outercount in range(MAX_OUTERCOUNT):
         HEAD_SOUTH = True
       #TODO Check turns with computer on
       if LANE == 'r':
+        motorFR.run_forever(speed_sp=-MIN_SPEED)
+        motorBR.run_forever(speed_sp=(MIN_SPEED))
+        motorBL.run_forever(speed_sp=(MIN_SPEED))
+        motorFL.run_forever(speed_sp=-(MIN_SPEED))
+        sleep(1)
         motorFR.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
         motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorBL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
         motorFL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
-        sleep(7)
+        sleep(3)
+        motorFR.run_forever(speed_sp=MIN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED))
+        motorFL.run_forever(speed_sp=MIN_SPEED)
+        sleep(1.5)
+        motorFR.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        sleep(2)
         motorFR.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
         motorBR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorBL.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
         motorFL.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
-        sleep(1)
+        sleep(.1)
       else:
+        motorFR.run_forever(speed_sp=-MIN_SPEED)
+        motorBR.run_forever(speed_sp=(MIN_SPEED))
+        motorBL.run_forever(speed_sp=(MIN_SPEED))
+        motorFL.run_forever(speed_sp=-(MIN_SPEED))
+        sleep(1)
         motorFR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorBR.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
         motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorFL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
-        sleep(7)
+        sleep(3)
+        motorFR.run_forever(speed_sp=MIN_SPEED)
+        motorBR.run_forever(speed_sp=-(MIN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED))
+        motorFL.run_forever(speed_sp=MIN_SPEED)
+        sleep(1)
+        motorFR.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBR.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
+        motorFL.run_forever(speed_sp=(MIN_SPEED + SLOW_TURN_SPEED))
+        sleep(2)
         motorFR.run_forever(speed_sp=MIN_SPEED - SLOW_TURN_SPEED)
         motorBR.run_forever(speed_sp=-(MIN_SPEED - SLOW_TURN_SPEED))
         motorBL.run_forever(speed_sp=-(MIN_SPEED + SLOW_TURN_SPEED))
         motorFL.run_forever(speed_sp=MIN_SPEED + SLOW_TURN_SPEED)
-        sleep(1)
+        sleep(.1)
 
     # If looking for BLUE/RED stripe to follow
     if (FOLLOW_BLUE_RED and not(following_line)):

@@ -9,8 +9,7 @@ except paramiko.SSHException:
         print("Connection Failed")
         quit()
  
-ssh.exec_command("python3 runaround.py", get_pty=True)
-sleep(5)
+ssh.exec_command("touch object.txt")
 #stdin,stdout,stderr = ssh.exec_command("hello")
 #sleep(1)
 #stdin.write("hello\n")
@@ -18,11 +17,6 @@ sleep(5)
 #sleep(10)
 #stdin.write("x")
 ssh.close()
-sleep(1)
-stdin,stdout,stderr = ssh.exec_command("python3 turn.py")
-for line in stdout.readlines():
-        print(line.strip())
-sleep(5)
 
 # ssh.exec_command("python3 runaround.py")
 
