@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+# This program is meant to be run on the EV3 brick, it will follow a red/blue line and turn around when it hits a black
+# border. If objectdetect is run simultaneously on the computer, it will see an object has been detected and change
+# lanes.
 from ev3dev.ev3 import *
 from time import sleep
 import os

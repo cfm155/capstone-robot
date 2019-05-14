@@ -1,7 +1,12 @@
+# This program runs the followandavoid program on the robot through ssh, and while that is running, it takes images,
+# analyzes them for red objects, and commands the robot to create an object file that allows the robot to detect and avoid
+# obstacles.
+
 from PIL import Image, ImageFilter
 import os
 import paramiko
 import time
+
 
 # Use paramiko to connect to the robot through ssh
 ssh = paramiko.SSHClient()
