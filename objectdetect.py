@@ -2,8 +2,8 @@ from PIL import Image, ImageFilter
 import os
 import paramiko
 import time
-from time import sleep
 
+# Use paramiko to connect to the robot through ssh
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 try:
@@ -12,74 +12,82 @@ except paramiko.SSHException:
     print("Connection Failed")
     quit()
 
-#TODO mess with thresholds and subrectangle size to find optimal performance
+# set threshold for how high the red value must be to count towards the percent of red pixels
 redThreshold = 100
-percThreshold = 10
-threshold = 100
-top = 500
-bottom = 0
+
+# set threshold for how low the green and blue values must be to count towards the percent of red pixels
+threshold = 75
+
+# set the minimum percent of red pixels to determine there is an object in the robot's path
+percThreshold = 25
+
+# set values for how large of a subrectangle you want the robot to look at. These values catch only what is in front
+# of the robot.
+top = 400
+bottom = 200
 left = 650
 right = 650
-steps = 30
-ssh.exec_command("python3 runaround.py")
+
+# set how many images you want the robot to take, this value lasts about as long as the robot's followandavoid method.
+steps = 45
+
+# execute the followandavoid function on the actual robot
+ssh.exec_command("python3 followandavoid.py")
+
+# keep track of how long it takes for each picture to be taken and analyzed
 startTime = time.time()
 for step in range(steps):
     currtime = time.time()
-    os.system("imagesnap plzwork.jpg\nconvert snapshot*.jpg plzwork.bmp\nrm snapshot*.jpg")
-    im = Image.open("plzwork.bmp")
-    # rgb_im = im.convert('RGB')
-    # r, g, b = rgb_im.getpixel((1, 1))
 
-    # print(r, g, b)
-    (65, 100, 137)
-    print(im.format, im.size, im.mode)
+    # take an image, convert it to a bmp, then delete the original image
+    os.system("imagesnap\nconvert snapshot*.jpg check.bmp\nrm snapshot*.jpg")
+
+    # open the new bmp image
+    im = Image.open("check.bmp")
+
+    # create a "box" with dimensions that we initialized earlier, then crop the rest
     box = (left, top, im.size[0] - right, im.size[1] - bottom)
     region = im.crop(box)
-    #region1 = region.filter(ImageFilter.BLUR)
-    region.show()
-    #region1.show()
 
+    # region = region.filter(ImageFilter.BLUR) # Gaussian blur the image (found that it did not help consistency of object detection)
+    # region.show() # show the image if you'd like to see what the robot sees
+
+    # take the rgb values of each pixel and separate them into red, blue, and green arrays
     pixels = list(region.getdata())
     reds = [i[0] for i in pixels]
     greens = [i[1] for i in pixels]
     blues = [i[2] for i in pixels]
 
+    # in each pixel, check if the green/blue values are low enough, if not, set the red value to 0 to ensure it is not
+    # counted towards the percent of reds
     for i in range(len(pixels)):
         if greens[i] > threshold and blues[i] > threshold:
             reds[i] = 0
 
     count = 0
+
+    # check what reds are left, and if they're high enough, count them
     for i in reds:
         if i > redThreshold:
             count +=1
+    # find the percent of reds in the image by dividing the count by the total number of pixels, then multiplying by 100
     percRed = count*100/len(reds)
-    print(count, "avg reds: ", percRed)
+    print("percent of reds:", percRed)
 
-    # count = 0
-    # for i in greens:
-    #     if i > 75:
-    #         count +=1
-    # print(count, "avg greens: ", count*100/len(reds))
-    #
-    # count = 0
-    # for i in blues:
-    #     if i > 75:
-    #         count +=1
-    # print(count, "avg blues: ", count*100/len(reds))
-    # print(max(reds), min(reds))
-
+    # If the percent of red pixels in the image is high enough, send the robot a command that will create an object.txt
+    # file if one does not exist, and will pause this program until that action is complete
     if percRed > percThreshold:
         print("object detected, sending command!")
-        # ssh.exec_command("python3 beeptest.py")
-        stdin,stdout,stderr = ssh.exec_command("python3 object.py")
+        stdin,stdout,stderr = ssh.exec_command("touch object.txt")
         for line in stdout.readlines():
             print(line.strip())
-        sleep(2)
+    # if no object is detected, move on in the loop and take the next picture
     else:
-        print("no object detected :)")
+        print("no object detected")
     print("time spent for step ",step,": ", time.time() - currtime)
     print()
 
+# print out the time spent and close the ssh connection
 timeSpent = time.time() - startTime
 print("time spent for ", steps, "steps: ", timeSpent)
 ssh.close()
