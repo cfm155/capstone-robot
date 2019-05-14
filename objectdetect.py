@@ -31,7 +31,7 @@ right = 650
 # set how many images you want the robot to take, this value lasts about as long as the robot's followandavoid method.
 steps = 45
 
-# execute the runaroundrevised function on the actual robot
+# execute the followandavoid function on the actual robot
 ssh.exec_command("python3 followandavoid.py")
 
 # keep track of how long it takes for each picture to be taken and analyzed
